@@ -164,8 +164,8 @@ from DetailsOfEntry
 create view view_CTPNHAP_VT as
 select import_id,material_code,material_name,import_quantity,importUnitPrice,
        (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
-                                                                  join importTicket iT on iT.import_id = DetailsOfEntry.id_import
-                                                                  join material m on m.material_id = DetailsOfEntry.id_material;
+  join importTicket iT on iT.import_id = DetailsOfEntry.id_import
+  join material m on m.material_id = DetailsOfEntry.id_material;
 
 
 
@@ -219,8 +219,8 @@ where import_quantity > 100;
 create view  view_CTPNHAP_VT_loc as
 select import_id, material_code, material_name, import_quantity,importUnitPrice,
        (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
-                                                                  join importTicket iT on iT.import_id = DetailsOfEntry.id_import
-                                                                  join material m on m.material_id = DetailsOfEntry.id_material
+                   join importTicket iT on iT.import_id = DetailsOfEntry.id_import
+                   join material m on m.material_id = DetailsOfEntry.id_material
 where unit = 'tấn';
 
 
@@ -232,8 +232,8 @@ where unit = 'tấn';
 create view   view_CTPXUAT as
 select export_id, material_code, export_quantity, exportunitprice,
        (export_quantity*DetailsOfTheRelease.exportUnitPrice) as 'Thành tiền' from detailsoftherelease
-                                                                                      join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
-                                                                                      join material m on m.material_id = DetailsOfTheRelease.id_material;
+    join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
+    join material m on m.material_id = DetailsOfTheRelease.id_material;
 
 
 
@@ -242,8 +242,8 @@ select export_id, material_code, export_quantity, exportunitprice,
 
 create view  view_CTPXUAT_VT as
 select export_id, material_code, material_name,export_quantity, exportunitprice from detailsoftherelease
-                                                                                         join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
-                                                                                         join material m on m.material_id = DetailsOfTheRelease.id_material;
+   join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
+    join material m on m.material_id = DetailsOfTheRelease.id_material;
 
 
 
@@ -252,8 +252,8 @@ select export_id, material_code, material_name,export_quantity, exportunitprice 
 
 create view view_CTPXUAT_VT_PX as
 select export_id, customer_name, material_code, material_name,export_quantity, exportunitprice from detailsoftherelease
-                                                                                                        join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
-                                                                                                        join material m on m.material_id = DetailsOfTheRelease.id_material;
+     join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
+    join material m on m.material_id = DetailsOfTheRelease.id_material;
 
 
 
@@ -261,13 +261,12 @@ select export_id, customer_name, material_code, material_name,export_quantity, e
 
 create procedure Total(in material_code1 int)
 begin
-select ((import_quantity - export_quantity)) as 'Tổng số lượng còn lại'
-from detailsoftherelease
-         join detailsofentry d on DetailsOfTheRelease.id_material = d.id_material
-         join material m on m.material_id = DetailsOfTheRelease.id_material
+select ((number + totalAmountEntered - totalExportQuantity)) as 'Số'
+from inventory
+         join material m on m.material_id = inventory.id_material
 where material_code = material_code1;
-end;
 
+end;
 call Total(333);
 
 

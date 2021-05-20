@@ -261,14 +261,18 @@ create view view_CTPXUAT_VT_PX as
 
 create procedure Total(in material_code1 int)
     begin
-        select ((import_quantity - export_quantity)) as 'Tổng số lượng còn lại'
-        from detailsoftherelease
-            join detailsofentry d on DetailsOfTheRelease.id_material = d.id_material
-            join material m on m.material_id = DetailsOfTheRelease.id_material
+        select ((number + totalAmountEntered - totalExportQuantity)) as 'Số'
+        from inventory
+                 join material m on m.material_id = inventory.id_material
         where material_code = material_code1;
-    end;
 
+    end;
 call Total(333);
+
+
+
+
+
 
 
 # Tạo SP cho biết tổng tiền xuất của vật tư với mã vật tư là tham số vào.
@@ -317,6 +321,107 @@ begin
 end;
 
 call addNew_orderDetail(4,5,30);
+
+
+
+
+
+
+
+# 1.số phiếu nhập hàng, mã vật tư, số lượng nhập, đơn giá nhập, thành tiền.
+
+ select import_id,material_code, import_quantity, importUnitPrice from detailsofentry
+ join material m on m.material_id = DetailsOfEntry.id_material
+ join importTicket iT on iT.import_id = DetailsOfEntry.id_import;
+
+
+
+ # 2.số phiếu nhập hàng, mã vật tư, tên vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập.
+
+ select import_id, material_code,material_name,import_quantity,importUnitPrice,
+        (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
+ join importTicket iT on DetailsOfEntry.id_import = iT.import_id
+ join material m on m.material_id = DetailsOfEntry.id_material;
+
+
+# 3.số phiếu nhập hàng, ngày nhập hàng, số đơn đặt hàng, mã vật tư, tên vật tư, số lượng nhập,
+# đơn giá nhập, thành tiền nhập.
+# --
+select import_id, day(import_date), order_id, material_code, material_name,import_quantity,importUnitPrice,
+       (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
+join importTicket iT on iT.import_id = DetailsOfEntry.id_import
+           join theOrder t on t.order_id = iT.id_order
+join material m on m.material_id = DetailsOfEntry.id_material;
+
+
+
+# 4.  số phiếu nhập hàng, ngày nhập hàng, số đơn đặt hàng, mã nhà cung cấp,
+# mã vật tư, tên vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập.
+# --
+select import_id, day(import_date), order_id, supplier_code,material_code,material_name,import_quantity,importUnitPrice,
+       (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
+join importTicket iT on iT.import_id = DetailsOfEntry.id_import
+join material m on m.material_id = DetailsOfEntry.id_material
+join theOrder t on iT.id_order = t.order_id
+join supplier s on s.supplier_id = t.id_supplier;
+# --
+# --
+# --
+# 5.số phiếu nhập hàng, mã vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập.
+# Và chỉ liệt kê các chi tiết nhập có số lượng nhập > 100.
+# --
+select import_id, material_code, import_quantity,  importUnitPrice, (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
+  join importTicket iT on iT.import_id = DetailsOfEntry.id_import
+  join theOrder t on t.order_id = iT.id_order
+  join material m on m.material_id = DetailsOfEntry.id_material
+where import_quantity > 100;
+# --
+# --
+# 6.số phiếu nhập hàng, mã vật tư, tên vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập.
+# Và chỉ liệt kê các chi tiết nhập vật tư có đơn vị tính là Tấn.
+# --
+select import_id, material_code, material_name, import_quantity,importUnitPrice,
+       (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
+join importTicket iT on iT.import_id = DetailsOfEntry.id_import
+join material m on m.material_id = DetailsOfEntry.id_material
+where unit = 'tấn';
+# --
+# --
+# 7.số phiếu xuất hàng, mã vật tư, số lượng xuất, đơn giá xuất, thành tiền xuất.
+# --
+select export_id, material_code, export_quantity, exportunitprice,
+       (export_quantity*DetailsOfTheRelease.exportUnitPrice) as 'Thành tiền' from detailsoftherelease
+join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
+join material m on m.material_id = DetailsOfTheRelease.id_material;
+# --
+# --
+# 8.số phiếu xuất hàng, mã vật tư, tên vật tư, số lượng xuất, đơn giá xuất.
+# --
+select export_id, material_code, material_name,export_quantity, exportunitprice from detailsoftherelease
+join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
+join material m on m.material_id = DetailsOfTheRelease.id_material;
+# --
+# --
+# 9.số phiếu xuất hàng, tên khách hàng, mã vật tư, tên vật tư, số lượng xuất, đơn giá xuất.
+# --
+select export_id, customer_name, material_code, material_name,export_quantity, exportunitprice from detailsoftherelease
+join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
+join material m on m.material_id = DetailsOfTheRelease.id_material;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
