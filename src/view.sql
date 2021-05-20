@@ -151,10 +151,10 @@ insert detailsoftherelease(detailsoftherelease_id, id_export, id_material, expor
 #     mã vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập.
 
 create view view_CTPNHAP as
-    select import_id,material_code,import_quantity,importUnitPrice, (import_quantity*importUnitPrice) as 'Thành tiền'
+select import_id,material_code,import_quantity,importUnitPrice, (import_quantity*importUnitPrice) as 'Thành tiền'
 from DetailsOfEntry
-join material m on m.material_id = DetailsOfEntry.id_material
-join importTicket iT on iT.import_id = DetailsOfEntry.id_import;
+         join material m on m.material_id = DetailsOfEntry.id_material
+         join importTicket iT on iT.import_id = DetailsOfEntry.id_import;
 
 
 
@@ -162,10 +162,10 @@ join importTicket iT on iT.import_id = DetailsOfEntry.id_import;
 # mã vật tư, tên vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập.
 
 create view view_CTPNHAP_VT as
-    select import_id,material_code,material_name,import_quantity,importUnitPrice,
-           (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
-    join importTicket iT on iT.import_id = DetailsOfEntry.id_import
-join material m on m.material_id = DetailsOfEntry.id_material;
+select import_id,material_code,material_name,import_quantity,importUnitPrice,
+       (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
+                                                                  join importTicket iT on iT.import_id = DetailsOfEntry.id_import
+                                                                  join material m on m.material_id = DetailsOfEntry.id_material;
 
 
 
@@ -173,8 +173,8 @@ join material m on m.material_id = DetailsOfEntry.id_material;
 # mã vật tư, tên vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập.
 
 create view view_CTPNHAP_VT_PN as
-    select import_id, date(import_date),order_id, material_code, material_name,import_quantity,importUnitPrice,
-         (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
+select import_id, date(import_date),order_id, material_code, material_name,import_quantity,importUnitPrice,
+    (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
     join importTicket iT on iT.import_id = DetailsOfEntry.id_import
     join theOrder t on t.order_id = iT.id_order
     join material m on m.material_id = DetailsOfEntry.id_material;
@@ -188,8 +188,8 @@ create view view_CTPNHAP_VT_PN as
 # mã nhà cung cấp, mã vật tư, tên vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập.
 
 create view vw_CTPNHAP_VT_PN_DH as
-    select import_id, date(import_date), order_id, supplier_code,material_code,material_name,import_quantity,importUnitPrice,
-           (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
+select import_id, date(import_date), order_id, supplier_code,material_code,material_name,import_quantity,importUnitPrice,
+    (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
     join importTicket iT on iT.import_id = DetailsOfEntry.id_import
     join theOrder t on t.order_id = iT.id_order
     join supplier s on s.supplier_id = t.id_supplier
@@ -203,11 +203,11 @@ create view vw_CTPNHAP_VT_PN_DH as
 # đơn giá nhập, thành tiền nhập. Và chỉ liệt kê các chi tiết nhập có số lượng nhập > 100.
 
 create view view_CTPNHAP_loc as
-    select import_id, material_code, import_quantity,  importUnitPrice, (import_quantity*importUnitPrice) as 'Thành tiền'
-    from detailsofentry
-    join importTicket iT on iT.import_id = DetailsOfEntry.id_import
-    join material m on m.material_id = DetailsOfEntry.id_material
-    where import_quantity > 100;
+select import_id, material_code, import_quantity,  importUnitPrice, (import_quantity*importUnitPrice) as 'Thành tiền'
+from detailsofentry
+         join importTicket iT on iT.import_id = DetailsOfEntry.id_import
+         join material m on m.material_id = DetailsOfEntry.id_material
+where import_quantity > 100;
 
 
 
@@ -217,11 +217,11 @@ create view view_CTPNHAP_loc as
 # số lượng nhập, đơn giá nhập, thành tiền nhập. Và chỉ liệt kê các chi tiết nhập vật tư có đơn vị tính là tấn.
 
 create view  view_CTPNHAP_VT_loc as
-   select import_id, material_code, material_name, import_quantity,importUnitPrice,
-         (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
-    join importTicket iT on iT.import_id = DetailsOfEntry.id_import
-    join material m on m.material_id = DetailsOfEntry.id_material
-    where unit = 'tấn';
+select import_id, material_code, material_name, import_quantity,importUnitPrice,
+       (import_quantity*importUnitPrice) as 'Thành tiền' from detailsofentry
+                                                                  join importTicket iT on iT.import_id = DetailsOfEntry.id_import
+                                                                  join material m on m.material_id = DetailsOfEntry.id_material
+where unit = 'tấn';
 
 
 
@@ -230,10 +230,10 @@ create view  view_CTPNHAP_VT_loc as
 # số lượng xuất, đơn giá xuất, thành tiền xuất.
 
 create view   view_CTPXUAT as
-    select export_id, material_code, export_quantity, exportunitprice,
-           (export_quantity*DetailsOfTheRelease.exportUnitPrice) as 'Thành tiền' from detailsoftherelease
-    join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
-    join material m on m.material_id = DetailsOfTheRelease.id_material;
+select export_id, material_code, export_quantity, exportunitprice,
+       (export_quantity*DetailsOfTheRelease.exportUnitPrice) as 'Thành tiền' from detailsoftherelease
+                                                                                      join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
+                                                                                      join material m on m.material_id = DetailsOfTheRelease.id_material;
 
 
 
@@ -241,9 +241,9 @@ create view   view_CTPXUAT as
 # Câu 8. Tạo view có tên vw_CTPXUAT_VT bao gồm các thông tin sau: số phiếu xuất hàng, mã vật tư, tên vật tư, số lượng xuất, đơn giá xuất.
 
 create view  view_CTPXUAT_VT as
-    select export_id, material_code, material_name,export_quantity, exportunitprice from detailsoftherelease
-    join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
-    join material m on m.material_id = DetailsOfTheRelease.id_material;
+select export_id, material_code, material_name,export_quantity, exportunitprice from detailsoftherelease
+                                                                                         join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
+                                                                                         join material m on m.material_id = DetailsOfTheRelease.id_material;
 
 
 
@@ -251,22 +251,22 @@ create view  view_CTPXUAT_VT as
 # tên vật tư, số lượng xuất, đơn giá xuất.
 
 create view view_CTPXUAT_VT_PX as
-    select export_id, customer_name, material_code, material_name,export_quantity, exportunitprice from detailsoftherelease
-    join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
-    join material m on m.material_id = DetailsOfTheRelease.id_material;
+select export_id, customer_name, material_code, material_name,export_quantity, exportunitprice from detailsoftherelease
+                                                                                                        join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
+                                                                                                        join material m on m.material_id = DetailsOfTheRelease.id_material;
 
 
 
 # Tạo Stored procedure (SP) cho biết tổng số lượng cuối của vật tư với mã vật tư là tham số vào.
 
 create procedure Total(in material_code1 int)
-    begin
-        select ((import_quantity - export_quantity)) as 'Tổng số lượng còn lại'
-        from detailsoftherelease
-            join detailsofentry d on DetailsOfTheRelease.id_material = d.id_material
-            join material m on m.material_id = DetailsOfTheRelease.id_material
-        where material_code = material_code1;
-    end;
+begin
+select ((import_quantity - export_quantity)) as 'Tổng số lượng còn lại'
+from detailsoftherelease
+         join detailsofentry d on DetailsOfTheRelease.id_material = d.id_material
+         join material m on m.material_id = DetailsOfTheRelease.id_material
+where material_code = material_code1;
+end;
 
 call Total(333);
 
@@ -274,14 +274,14 @@ call Total(333);
 # Tạo SP cho biết tổng tiền xuất của vật tư với mã vật tư là tham số vào.
 
 create procedure TotalAmount_Export (in materialCode int)
-    begin
-        select DetailsOfTheRelease_id as 'Số đơn chi tiết xuất hàng',  (export_quantity*exportUnitPrice) as 'Tổng tiền xuất'
-        from detailsoftherelease
-                 join material m on m.material_id = DetailsOfTheRelease.id_material
-                 join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
+begin
+select DetailsOfTheRelease_id as 'Số đơn chi tiết xuất hàng',  (export_quantity*exportUnitPrice) as 'Tổng tiền xuất'
+from detailsoftherelease
+         join material m on m.material_id = DetailsOfTheRelease.id_material
+         join exportTicket eT on eT.export_id = DetailsOfTheRelease.id_export
 
-        where material_code = materialCode;
-    end;
+where material_code = materialCode;
+end;
 call TotalAmount_Export(111);
 
 
@@ -289,11 +289,11 @@ call TotalAmount_Export(111);
 # Tạo SP cho biết tổng số lượng đặt theo số đơn hàng với số đơn hàng là tham số vào.
 
 create procedure totalAmountOder(in order_code int)
-    begin
-        select  OrderDetails_id as 'Mã số chi tiết đơn đặt hàng',oder_quantity as 'Số lượng'
-        from OrderDetails
-            where id_theOrder = order_code;
-    end;
+begin
+select  OrderDetails_id as 'Mã số chi tiết đơn đặt hàng',oder_quantity as 'Số lượng'
+from OrderDetails
+where id_theOrder = order_code;
+end;
 
 call totalAmountOder(1);
 
